@@ -52,5 +52,6 @@ This is project for calendar one ai.
 
 https://github.com/zhanymkanov/fastapi-best-practices
 
-
 https://github.com/JakubPluta/gymhero/
+
+https://github.com/chatchat-space/Langchain-Chatchat/blob/master/libs/chatchat-server/chatchat/utils.py
