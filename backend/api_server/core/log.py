@@ -1,6 +1,9 @@
+import os
 from typing import Optional
 from loguru import Logger, logger
 import sys
+from core.config import settings
+
 
 # Define valid debug levels
 DebugLevels = ["DEBUG", "INFO", "WARNING", "ERROR"]
@@ -43,18 +46,25 @@ def get_logger(
     log_format = "{time:YYYY-MM-DD HH:mm:ss} - {name} - {level} - {message}"
 
     # Add handler with specified level and format
-    if not log_file:
-        logger.add(
-            sys.stdout,
-            format=log_format,
-            level=level,
-            colorize=True,  # Optional: adds colors to log levels
-        )
-    else:
+    if log_file:
+        if not log_file.endswith(".log"):
+            log_file = f"{log_file}.log"
+        if not os.path.isabs(log_file):
+            # Convert relative log file path to absolute path using the configured LOG_FILE_PATH
+            # settings.LOG_FILE_PATH is the base directory for log files from config
+            # log_file is the filename (e.g., "app.log")
+            # The / operator creates a Path object, and resolve() converts it to absolute path
+            log_file = str((settings.LOG_FILE_PATH / log_file).resolve())
         logger.add(
             log_file,
             format=log_format,
-            rotation="7 days",
+            level=level,
+            colorize=True,
+        )
+    else:
+        logger.add(
+            sys.stdout,
+            format=log_format,
             level=level,
             colorize=True,  # Optional: adds colors to log levels
         )

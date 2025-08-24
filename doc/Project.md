@@ -55,3 +55,8 @@ https://github.com/zhanymkanov/fastapi-best-practices
 https://github.com/JakubPluta/gymhero/
 
 https://github.com/chatchat-space/Langchain-Chatchat/blob/master/libs/chatchat-server/chatchat/utils.py
+
+
+## Project database
+
+https://dbdiagram.io/d/Ai-Assitant-655ee68c3be149578790aede

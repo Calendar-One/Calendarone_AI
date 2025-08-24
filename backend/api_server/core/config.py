@@ -1,11 +1,6 @@
 import os
 
-from pydantic import EmailStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
-
-from log import get_logger
-
-log = get_logger(__name__)
 
 
 class Settings(BaseSettings):
@@ -14,26 +9,19 @@ class Settings(BaseSettings):
     )
 
     API_VERSION: str
-    PROJECT_NAME: str
     ENV: str
-    SECRET_KEY: str
-    ALGORITHM: str
-    ACCESS_TOKEN_EXPIRE_MINUTES: int
+
+    DB_HOST: str
+    DB_USER: str
+    DB_PASSWORD: str
+    DB_NAME: str
+    DB_PORT: int
 
     SERVER_HOST: str
     SERVER_PORT: int
 
-    POSTGRES_HOST: str
-    POSTGRES_USER: str
-    POSTGRES_PASSWORD: str
-    POSTGRES_DB: str
-    POSTGRES_PORT: int
-
-    FIRST_SUPERUSER_USERNAME: str
-    FIRST_SUPERUSER_EMAIL: EmailStr
-    FIRST_SUPERUSER_PASSWORD: str
-
     LOG_FILE_ROTATION_DAYS: int
+    LOG_FILE_PATH: str
 
 
 class ContainerDevSettings(Settings):
@@ -77,7 +65,6 @@ def get_settings(env: str = "dev") -> Settings:
     Raises:
         ValueError: If the environment is invalid.
     """
-    log.debug("getting settings for env: %s", env)
 
     if env.lower() in ["dev", "d", "development"]:
         return ContainerDevSettings()
@@ -89,6 +76,6 @@ def get_settings(env: str = "dev") -> Settings:
     raise ValueError("Invalid environment. Must be 'dev' or 'test' ,'local'.")
 
 
-_env = os.environ.get("ENV", "local")
+_env = os.environ.get("ENV", "dev")
 
 settings = get_settings(env=_env)
