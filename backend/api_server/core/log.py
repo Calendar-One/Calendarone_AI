@@ -1,6 +1,13 @@
+from __future__ import annotations
+from typing import TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from loguru import Logger
+
 import os
 from typing import Optional
-from loguru import Logger, logger
+from loguru import logger
+
 import sys
 from core.config import settings
 

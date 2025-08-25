@@ -18,8 +18,8 @@ class ChatBot(BaseModel):
     prompt_template: Mapped[str] = mapped_column(Text, nullable=True)
     greeting_message: Mapped[str] = mapped_column(Text, nullable=True)
     description: Mapped[str] = mapped_column(Text, nullable=True)
-    llm_name_id: Mapped[str] = mapped_column(
-        String(255), ForeignKey("ll_models.llm_id"), nullable=True
+    llm_name_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("ll_models.llm_id"), nullable=True
     )
     temperature: Mapped[str] = mapped_column(String(50), nullable=True)
     context_length: Mapped[int] = mapped_column(Integer, nullable=True)

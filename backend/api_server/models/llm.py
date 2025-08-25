@@ -10,7 +10,7 @@ class LLModel(BaseModel):
 
     __tablename__ = "ll_models"
 
-    llm_id: Mapped[str] = mapped_column(String(255), primary_key=True)
+    llm_id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     llm_name: Mapped[str] = mapped_column(String(255), nullable=False)
     context_window: Mapped[int] = mapped_column(Integer, nullable=False)
     description: Mapped[str] = mapped_column(Text, nullable=True)

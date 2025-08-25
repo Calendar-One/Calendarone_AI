@@ -10,8 +10,8 @@ class Setting(BaseModel):
 
     __tablename__ = "settings"
 
-    llm_id: Mapped[str] = mapped_column(
-        String(255), ForeignKey("ll_models.llm_id"), primary_key=True
+    llm_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("ll_models.llm_id"), primary_key=True
     )
     token_limit_monthly: Mapped[int] = mapped_column(Integer, nullable=True)
     token_used: Mapped[int] = mapped_column(Integer, nullable=True)

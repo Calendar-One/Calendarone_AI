@@ -21,3 +21,10 @@ pre-commit clean
 pre-commit install
 pre-commit run --all-files
 ```
+
+
+4. setup migrations
+   install alembic
+   alembic revision --autogenerate -m "Added ai tables 1"
+
+   alembic upgrade head

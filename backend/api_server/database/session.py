@@ -16,8 +16,16 @@ def build_sqlalchemy_database_url_from_settings(_settings: Settings) -> str:
     Returns:
         str: The generated SQLAlchemy URL for SQL Server using pyodbc.
     """
+
+    # Note: special characters (@, %, !, etc.) in passwords must be URL-encoded.
+    # For example, @ → %40.
+    from urllib.parse import quote_plus
+
+    encoded_user = quote_plus(_settings.DB_USER)
+    encoded_password = quote_plus(_settings.DB_PASSWORD)
+
     return (
-        f"mssql+pyodbc://{_settings.DB_USER}:{_settings.DB_PASSWORD}"
+        f"mssql+pyodbc://{encoded_user}:{encoded_password}"
         f"@{_settings.DB_HOST}:{_settings.DB_PORT}/{_settings.DB_NAME}"
         f"?driver=ODBC+Driver+17+for+SQL+Server"
     )

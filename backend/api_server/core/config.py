@@ -26,28 +26,28 @@ class Settings(BaseSettings):
 
 class ContainerDevSettings(Settings):
     model_config = SettingsConfigDict(
-        env_file="./.env.dev", env_file_encoding="utf-8", case_sensitive=True
+        env_file="../.env.dev", env_file_encoding="utf-8", case_sensitive=True
     )
     ENV: str = "dev"
 
 
 class ContainerTestSettings(Settings):
     model_config = SettingsConfigDict(
-        env_file="./.env.test", env_file_encoding="utf-8", case_sensitive=True
+        env_file="../.env.test", env_file_encoding="utf-8", case_sensitive=True
     )
     ENV: str = "test"
 
 
 class LocalTestSettings(Settings):
     model_config = SettingsConfigDict(
-        env_file="./.env.test.local", env_file_encoding="utf-8", case_sensitive=True
+        env_file="../.env.test.local", env_file_encoding="utf-8", case_sensitive=True
     )
     ENV: str = "test"
 
 
 class LocalDevSettings(Settings):
     model_config = SettingsConfigDict(
-        env_file="./.env.local", env_file_encoding="utf-8", case_sensitive=True
+        env_file="../.env.local", env_file_encoding="utf-8", case_sensitive=True
     )
     ENV: str = "local"
 
