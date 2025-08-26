@@ -50,11 +50,11 @@ def get_engine(database_url: str, echo=False) -> Engine:
     return engine
 
 
-# https://docs.sqlalchemy.org/en/20/_modules/examples/extending_query/filter_public.html
 @event.listens_for(Session, "before_flush")
 def _soft_delete_listener(session, flush_context, instances):
     """
     Intercepts deletes and converts them to soft deletes.
+    doc: https://docs.sqlalchemy.org/en/20/orm/events.html#sqlalchemy.orm.SessionEvents.before_flush
     """
     # Iterate through all objects marked for deletion in this session
     for obj in session.deleted:
@@ -78,7 +78,9 @@ def _add_soft_delete_filter_listener(execute_state):
     """
     Add soft delete filter to session queries.
     This function is called for each new session.
+    Ref: https://docs.sqlalchemy.org/en/20/_modules/examples/extending_query/filter_public.html
     """
+    # state ref => https://docs.sqlalchemy.org/en/20/orm/session_api.html#sqlalchemy.orm.ORMExecuteState
     if (
         execute_state.is_select
         and not execute_state.is_column_load

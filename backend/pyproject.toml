@@ -24,3 +24,8 @@ packages = ["api_server"]
 include = [
     "/api_server",
 ]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.4.1",
+]
