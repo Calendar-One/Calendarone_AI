@@ -25,9 +25,7 @@ repos:
         exclude: |
           (?x)^(
               __init__\.py|
-              migrations|
               api_server/alembic|
-              __pycache__|
               backend/api_server/alembic/env\.py
           )$
       - id: ruff-format
@@ -35,9 +33,7 @@ repos:
         exclude: |
           (?x)^(
               __init__\.py|
-              migrations|
               api_server/alembic|
-              __pycache__|
               backend/api_server/alembic/env\.py
           )$
 

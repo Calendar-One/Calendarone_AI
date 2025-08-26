@@ -9,7 +9,7 @@ from typing import Optional
 from loguru import logger
 
 import sys
-from core.config import settings
+from api_server.core.config import settings
 
 
 # Define valid debug levels
