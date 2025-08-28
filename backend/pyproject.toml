@@ -25,7 +25,22 @@ include = [
     "/api_server",
 ]
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+# https://docs.pytest.org/en/latest/explanation/goodpractices.html#which-import-mode
+addopts = [
+    "--import-mode=importlib",
+]
+env = [
+    "ENV=test",
+]
+
+
 [dependency-groups]
 dev = [
     "pytest>=8.4.1",
+    "pytest-env>=1.1.5",
 ]

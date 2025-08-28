@@ -28,3 +28,14 @@ pre-commit run --all-files
    alembic revision --autogenerate -m "Added ai tables 1"
 
    alembic upgrade head
+
+
+5. run tests
+```
+cd backend 
+
+python -m pytest tests/ -v -s
+
+-s to show all print
+-v verbose to show all detail
+```

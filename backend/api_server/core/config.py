@@ -94,5 +94,5 @@ def get_settings(env: str = "dev") -> Settings:
 
 
 _env = os.environ.get("ENV", "dev")
-print(get_env_file_parent_path())
+
 settings = get_settings(env=_env)
