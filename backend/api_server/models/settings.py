@@ -10,15 +10,12 @@ class Setting(BaseModel):
 
     __tablename__ = "settings"
 
-    llm_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey("ll_models.llm_id"), primary_key=True
+    setting_id: Mapped[int] = mapped_column(
+        Integer, primary_key=True, autoincrement=True
     )
-    token_limit_monthly: Mapped[int] = mapped_column(Integer, nullable=True)
-    token_used: Mapped[int] = mapped_column(Integer, nullable=True)
-    token: Mapped[str] = mapped_column(String(255), nullable=True)
 
-    # Relationships
-    llm_model = relationship("LLModel", foreign_keys=[llm_id])
+    setting_key: Mapped[str] = mapped_column(String(100), nullable=False)
+    setting_value: Mapped[str] = mapped_column(String(1000), nullable=True)
 
 
 class McpServer(BaseModel):
@@ -32,5 +29,41 @@ class McpServer(BaseModel):
     server_name: Mapped[str] = mapped_column(
         String(255), nullable=False
     )  # Fixed typo from "SeverName"
+    description: Mapped[str] = mapped_column(String(), nullable=True)
     config: Mapped[str] = mapped_column(String(1000), nullable=True)
     is_enable: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
+
+
+class CloudFile(BaseModel):
+    """
+    File model for storing file uploads to cloud storage (S3, GCP, etc.).
+    """
+
+    __tablename__ = "cloud_files"
+
+    cloud_file_id: Mapped[int] = mapped_column(
+        Integer, primary_key=True, autoincrement=True
+    )
+    original_file_name: Mapped[str] = mapped_column(String(255), nullable=False)
+    stored_file_name: Mapped[str] = mapped_column(String(255), nullable=True)
+    file_path: Mapped[str] = mapped_column(String(500), nullable=True)
+    file_size: Mapped[int] = mapped_column(Integer, nullable=True)
+    content_type: Mapped[str] = mapped_column(String(50), nullable=True)
+
+    storage_provider_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("enum_values.enum_value_id"), nullable=True
+    )  # 'S3', 'GCP', 'Azure', etc.
+    bucket_name: Mapped[str] = mapped_column(String(255), nullable=False)
+    file_url: Mapped[str] = mapped_column(String(1000), nullable=True)
+    upload_status_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("enum_values.enum_value_id"), nullable=True
+    )  # 'pending', 'uploaded', 'failed'
+    checksum: Mapped[str] = mapped_column(
+        String(255), nullable=True
+    )  # For file integrity verification
+
+    # Relationships
+    upload_status_enum = relationship("EnumValue", foreign_keys=[upload_status_id])
+    storage_provider_enum = relationship(
+        "EnumValue", foreign_keys=[storage_provider_id]
+    )

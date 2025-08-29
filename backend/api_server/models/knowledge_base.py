@@ -15,6 +15,7 @@ class KnowledgeBase(BaseModel):
     )
     knowledge_base_name: Mapped[str] = mapped_column(String(255), nullable=False)
     description: Mapped[str] = mapped_column(Text, nullable=True)
+
     knowledge_base_type_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("enum_values.enum_value_id"), nullable=True
     )
@@ -23,10 +24,12 @@ class KnowledgeBase(BaseModel):
     is_load_from_database: Mapped[bool] = mapped_column(
         Boolean, default=False, nullable=False
     )
+
     tags: Mapped[str] = mapped_column(String(500), nullable=True)
     embedding_llm_name_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("ll_models.llm_id"), nullable=True
     )
+
     ranker_llm_name_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("ll_models.llm_id"), nullable=True
     )
@@ -55,13 +58,14 @@ class KnowledgeBaseFile(BaseModel):
     knowledge_base_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("knowledge_bases.knowledge_base_id"), nullable=False
     )
-    original_file_name: Mapped[str] = mapped_column(String(255), nullable=True)
-    stored_file_name: Mapped[str] = mapped_column(String(255), nullable=True)
-    download_url: Mapped[str] = mapped_column(String(500), nullable=True)
+
+    cloud_file_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("cloud_files.cloud_file_id"), nullable=True
+    )
     processing_status: Mapped[int] = mapped_column(
         Integer, ForeignKey("enum_values.enum_value_id"), nullable=True
     )
-    embedding_ids: Mapped[str] = mapped_column(String(1000), nullable=True)
+    embedding_ids: Mapped[str] = mapped_column(String(), nullable=True)
     extracted_text: Mapped[str] = mapped_column(Text, nullable=True)
     extraction_metadata: Mapped[dict] = mapped_column(JSON, nullable=True)
 
@@ -99,7 +103,7 @@ class KnowledgeBaseUrl(BaseModel):
     processing_status: Mapped[int] = mapped_column(
         Integer, ForeignKey("enum_values.enum_value_id"), nullable=True
     )
-    embedding_ids: Mapped[str] = mapped_column(String(1000), nullable=True)
+    embedding_ids: Mapped[str] = mapped_column(String(), nullable=True)
     outbound_links: Mapped[str] = mapped_column(
         Text, nullable=True
     )  # Text[] equivalent
@@ -131,7 +135,7 @@ class KnowledgeBaseText(BaseModel):
     embedding_processing_status: Mapped[int] = mapped_column(
         Integer, ForeignKey("enum_values.enum_value_id"), nullable=True
     )
-    embedding_ids: Mapped[str] = mapped_column(String(1000), nullable=True)
+    embedding_ids: Mapped[str] = mapped_column(String(), nullable=True)
     outbound_links: Mapped[str] = mapped_column(
         Text, nullable=True
     )  # Text[] equivalent

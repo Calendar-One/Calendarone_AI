@@ -15,6 +15,14 @@
             "env": {
                 "PYTHONPATH": "${workspaceFolder}/backend"
             }
+        },
+        {
+            "name": "Python Debugger: Server",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "api_server.server",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}/backend",
         }
     ]
 }

@@ -1,8 +1,12 @@
 from fastapi import FastAPI
-from core.config import settings
-from core.log import get_logger
+from api_server.core.config import settings
+from api_server.core.log import get_logger
+from api_server.initial_data import init
 
 log = get_logger(__name__)
+
+
+init()
 
 app = FastAPI(
     title="API Server",

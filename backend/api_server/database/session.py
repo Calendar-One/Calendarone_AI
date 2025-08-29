@@ -5,6 +5,7 @@ from sqlalchemy.orm import sessionmaker, Session
 
 from api_server.core.config import Settings, settings
 from api_server.models.base import BaseModel
+from api_server.models.users import User
 
 
 def build_sqlalchemy_database_url_from_settings(_settings: Settings) -> str:
@@ -124,3 +125,26 @@ def get_local_session(database_url: str, echo=False, **kwargs) -> sessionmaker:
 
 
 SQLALCHEMY_DATABASE_URL = build_sqlalchemy_database_url_from_settings(settings)
+
+
+# init data
+def init_db(session: Session) -> None:
+    # Tables should be created with Alembic migrations
+    # But if you don't want to use migrations, create
+    # the tables un-commenting the next lines
+    # from sqlmodel import SQLModel
+
+    # This works because the models are already imported and registered from app.models
+    # SQLModel.metadata.create_all(engine)
+
+    user = (
+        session.query(User).filter(User.email == settings.FIRST_SUPERUSER_EMAIL).first()
+    )
+    if not user:
+        user_in = User(
+            user_name=settings.FIRST_SUPERUSER_USERNAME,
+            email=settings.FIRST_SUPERUSER_EMAIL,
+            password=settings.FIRST_SUPERUSER_PASSWORD,
+        )
+        session.add(user_in)
+        session.commit()

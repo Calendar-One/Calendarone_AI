@@ -1,8 +1,8 @@
 """Added ai tables 1
 
-Revision ID: 27b0fa6a4413
+Revision ID: 01a118aab696
 Revises: 
-Create Date: 2025-08-25 23:55:30.679357
+Create Date: 2025-08-29 21:41:59.859570
 
 """
 from typing import Sequence, Union
@@ -12,7 +12,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision: str = "27b0fa6a4413"
+revision: str = "01a118aab696"
 down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
@@ -57,6 +57,7 @@ def upgrade() -> None:
         "mcp_servers",
         sa.Column("mcp_server_id", sa.String(length=255), nullable=False),
         sa.Column("server_name", sa.String(length=255), nullable=False),
+        sa.Column("description", sa.String(), nullable=True),
         sa.Column("config", sa.String(length=1000), nullable=True),
         sa.Column("is_enable", sa.Boolean(), nullable=False),
         sa.Column("created_at", sa.DateTime(), nullable=False),
@@ -66,8 +67,19 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("mcp_server_id"),
     )
     op.create_table(
+        "settings",
+        sa.Column("setting_id", sa.Integer(), autoincrement=True, nullable=False),
+        sa.Column("setting_key", sa.String(length=100), nullable=False),
+        sa.Column("setting_value", sa.String(length=1000), nullable=True),
+        sa.Column("created_at", sa.DateTime(), nullable=False),
+        sa.Column("updated_at", sa.DateTime(), nullable=False),
+        sa.Column("deleted_at", sa.DateTime(), nullable=True),
+        sa.Column("is_deleted", sa.Boolean(), nullable=False),
+        sa.PrimaryKeyConstraint("setting_id"),
+    )
+    op.create_table(
         "users",
-        sa.Column("user_id", sa.String(length=255), nullable=False),
+        sa.Column("user_id", sa.Integer(), autoincrement=True, nullable=False),
         sa.Column("user_name", sa.String(length=255), nullable=False),
         sa.Column("email", sa.String(length=255), nullable=False),
         sa.Column("password", sa.String(length=255), nullable=False),
@@ -96,20 +108,31 @@ def upgrade() -> None:
         sa.PrimaryKeyConstraint("enum_value_id"),
     )
     op.create_table(
-        "settings",
-        sa.Column("llm_id", sa.Integer(), nullable=False),
-        sa.Column("token_limit_monthly", sa.Integer(), nullable=True),
-        sa.Column("token_used", sa.Integer(), nullable=True),
-        sa.Column("token", sa.String(length=255), nullable=True),
+        "cloud_files",
+        sa.Column("cloud_file_id", sa.Integer(), autoincrement=True, nullable=False),
+        sa.Column("original_file_name", sa.String(length=255), nullable=False),
+        sa.Column("stored_file_name", sa.String(length=255), nullable=True),
+        sa.Column("file_path", sa.String(length=500), nullable=True),
+        sa.Column("file_size", sa.Integer(), nullable=True),
+        sa.Column("content_type", sa.String(length=50), nullable=True),
+        sa.Column("storage_provider_id", sa.Integer(), nullable=True),
+        sa.Column("bucket_name", sa.String(length=255), nullable=False),
+        sa.Column("file_url", sa.String(length=1000), nullable=True),
+        sa.Column("upload_status_id", sa.Integer(), nullable=True),
+        sa.Column("checksum", sa.String(length=255), nullable=True),
         sa.Column("created_at", sa.DateTime(), nullable=False),
         sa.Column("updated_at", sa.DateTime(), nullable=False),
         sa.Column("deleted_at", sa.DateTime(), nullable=True),
         sa.Column("is_deleted", sa.Boolean(), nullable=False),
         sa.ForeignKeyConstraint(
-            ["llm_id"],
-            ["ll_models.llm_id"],
+            ["storage_provider_id"],
+            ["enum_values.enum_value_id"],
         ),
-        sa.PrimaryKeyConstraint("llm_id"),
+        sa.ForeignKeyConstraint(
+            ["upload_status_id"],
+            ["enum_values.enum_value_id"],
+        ),
+        sa.PrimaryKeyConstraint("cloud_file_id"),
     )
     op.create_table(
         "knowledge_bases",
@@ -162,6 +185,10 @@ def upgrade() -> None:
         sa.Column("deleted_at", sa.DateTime(), nullable=True),
         sa.Column("is_deleted", sa.Boolean(), nullable=False),
         sa.ForeignKeyConstraint(
+            ["avatar_id"],
+            ["cloud_files.cloud_file_id"],
+        ),
+        sa.ForeignKeyConstraint(
             ["knowledge_base_id"],
             ["knowledge_bases.knowledge_base_id"],
         ),
@@ -177,17 +204,19 @@ def upgrade() -> None:
             "knowledge_base_file_id", sa.Integer(), autoincrement=True, nullable=False
         ),
         sa.Column("knowledge_base_id", sa.Integer(), nullable=False),
-        sa.Column("original_file_name", sa.String(length=255), nullable=True),
-        sa.Column("stored_file_name", sa.String(length=255), nullable=True),
-        sa.Column("download_url", sa.String(length=500), nullable=True),
+        sa.Column("cloud_file_id", sa.Integer(), nullable=True),
         sa.Column("processing_status", sa.Integer(), nullable=True),
-        sa.Column("embedding_ids", sa.String(length=1000), nullable=True),
+        sa.Column("embedding_ids", sa.String(), nullable=True),
         sa.Column("extracted_text", sa.Text(), nullable=True),
         sa.Column("extraction_metadata", sa.JSON(), nullable=True),
         sa.Column("created_at", sa.DateTime(), nullable=False),
         sa.Column("updated_at", sa.DateTime(), nullable=False),
         sa.Column("deleted_at", sa.DateTime(), nullable=True),
         sa.Column("is_deleted", sa.Boolean(), nullable=False),
+        sa.ForeignKeyConstraint(
+            ["cloud_file_id"],
+            ["cloud_files.cloud_file_id"],
+        ),
         sa.ForeignKeyConstraint(
             ["knowledge_base_id"],
             ["knowledge_bases.knowledge_base_id"],
@@ -208,7 +237,7 @@ def upgrade() -> None:
         sa.Column("content", sa.Text(), nullable=False),
         sa.Column("content_type_id", sa.Integer(), nullable=True),
         sa.Column("embedding_processing_status", sa.Integer(), nullable=True),
-        sa.Column("embedding_ids", sa.String(length=1000), nullable=True),
+        sa.Column("embedding_ids", sa.String(), nullable=True),
         sa.Column("outbound_links", sa.Text(), nullable=True),
         sa.Column("inbound_link_count", sa.Integer(), nullable=True),
         sa.Column("created_at", sa.DateTime(), nullable=False),
@@ -247,7 +276,7 @@ def upgrade() -> None:
         sa.Column("content_length", sa.Integer(), nullable=True),
         sa.Column("content_type", sa.String(length=255), nullable=True),
         sa.Column("processing_status", sa.Integer(), nullable=True),
-        sa.Column("embedding_ids", sa.String(length=1000), nullable=True),
+        sa.Column("embedding_ids", sa.String(), nullable=True),
         sa.Column("outbound_links", sa.Text(), nullable=True),
         sa.Column("inbound_link_count", sa.Integer(), nullable=True),
         sa.Column("created_at", sa.DateTime(), nullable=False),
@@ -350,9 +379,10 @@ def downgrade() -> None:
     op.drop_table("knowledge_base_files")
     op.drop_table("chat_bots")
     op.drop_table("knowledge_bases")
-    op.drop_table("settings")
+    op.drop_table("cloud_files")
     op.drop_table("enum_values")
     op.drop_table("users")
+    op.drop_table("settings")
     op.drop_table("mcp_servers")
     op.drop_table("ll_models")
     op.drop_table("enum_types")

@@ -9,9 +9,7 @@ import sys
 import os
 
 # Get the absolute path to the project root
-print(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..")))
-print(sys.path)
 
 
 # this is the Alembic Config object, which provides

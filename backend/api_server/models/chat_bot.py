@@ -13,7 +13,11 @@ class ChatBot(BaseModel):
     chat_bot_id: Mapped[int] = mapped_column(
         Integer, primary_key=True, autoincrement=True
     )
-    avatar_id: Mapped[int] = mapped_column(Integer, nullable=True)
+
+    avatar_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey("cloud_files.cloud_file_id"), nullable=True
+    )
+
     chat_bot_name: Mapped[str] = mapped_column(String(255), nullable=False)
     prompt_template: Mapped[str] = mapped_column(Text, nullable=True)
     greeting_message: Mapped[str] = mapped_column(Text, nullable=True)
@@ -21,6 +25,7 @@ class ChatBot(BaseModel):
     llm_name_id: Mapped[int] = mapped_column(
         Integer, ForeignKey("ll_models.llm_id"), nullable=True
     )
+
     temperature: Mapped[str] = mapped_column(String(50), nullable=True)
     context_length: Mapped[int] = mapped_column(Integer, nullable=True)
     conversation_rounds: Mapped[int] = mapped_column(Integer, nullable=True)

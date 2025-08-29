@@ -1,6 +1,6 @@
 from api_server.core.log import get_logger
 from api_server.database import get_db
-from api_server.models.users import User
+from api_server.database import init_db
 
 log = get_logger(__name__)
 
@@ -10,24 +10,9 @@ def init() -> None:
     session = next(db_generator)
 
     try:
-        user = session.query(User).filter(User.email == "admin@example.com").first()
-        if not user:
-            import uuid
-
-            user_in = User(
-                user_id=str(uuid.uuid4()),
-                user_name="admin",
-                email="admin@example.com",
-                password="admin",
-            )
-            session.add(user_in)
-            session.commit()
-        else:
-            #  delete user
-            session.delete(user)
-            session.commit()
+        init_db(session)
     finally:
-        session.close()
+        next(db_generator, None)
 
 
 def main() -> None:

@@ -24,6 +24,7 @@ pre-commit run --all-files
 
 
 4. setup migrations
+   cd backend/api_server
    install alembic
    alembic revision --autogenerate -m "Added ai tables 1"
 

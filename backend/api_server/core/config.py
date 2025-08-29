@@ -11,6 +11,11 @@ class Settings(BaseSettings):
     API_VERSION: str
     ENV: str
 
+    # super  user
+    FIRST_SUPERUSER_USERNAME: str
+    FIRST_SUPERUSER_EMAIL: str
+    FIRST_SUPERUSER_PASSWORD: str
+
     DB_HOST: str
     DB_USER: str
     DB_PASSWORD: str
