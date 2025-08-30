@@ -11,6 +11,10 @@ class Settings(BaseSettings):
     API_VERSION: str
     ENV: str
 
+    # auth jwt
+    SECRET_KEY: str
+    ALGORITHM: str
+
     # super  user
     FIRST_SUPERUSER_USERNAME: str
     FIRST_SUPERUSER_EMAIL: str
