@@ -1,6 +1,14 @@
 from pydantic import BaseModel, EmailStr, Field, field_validator
 
 
+class UserBase(BaseModel):
+    user_name: str = Field(..., description="User's name")
+    email: EmailStr = Field(..., description="User's email address")
+    hashed_password: str = Field(..., description="User's password")
+    is_active: bool = Field(..., description="User's active status")
+    is_superuser: bool = Field(..., description="User's superuser status")
+
+
 class UserLoginRequest(BaseModel):
     """
     DTO for user login request.
@@ -79,15 +87,11 @@ class UserResetPasswordResponse(BaseModel):
     email: EmailStr = Field(..., description="Email address where reset link was sent")
 
 
-class UserCreateRequest(BaseModel):
+class UserCreateRequest(UserBase):
     """
     DTO for user registration request.
     """
 
-    user_name: str = Field(
-        ..., min_length=1, max_length=255, description="User's display name"
-    )
-    email: EmailStr = Field(..., description="User's email address")
     password: str = Field(..., min_length=8, description="User's password")
     confirm_password: str = Field(..., description="Password confirmation")
 

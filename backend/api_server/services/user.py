@@ -1,37 +1,41 @@
-from datetime import timedelta, datetime, timezone
 from typing import Optional
+from api_server.core.security import verify_password
 from api_server.models.users import User
+from api_server.services.base import BaseService
 from sqlalchemy.orm import Session
-from jose import jwt
-from fastapi import HTTPException
-from api_server.core.config import settings
 
 
-def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
-    to_encode = data.copy()
-    if expires_delta:
-        expire = datetime.now(timezone.utc) + expires_delta
-    else:
-        expire = datetime.now(timezone.utc) + timedelta(minutes=15)
-    to_encode.update({"exp": expire})
-    return jwt.encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
+class UserService(BaseService):
+    def get_user_by_email(
+        self,
+        session: Session,
+        email: str,
+    ) -> User:
+        """
+        Get a user by email.
+        """
+        return session.query(User).filter(User.email == email).first()
+
+    def authenticate_user(
+        self, db: Session, email: str, password: str
+    ) -> Optional[User]:
+        """
+        Authenticates a user with the given email and password.
+
+        Parameters:
+            db (Session): The database session object.
+            email (str): The email of the user.
+            password (str): The password of the user.
+
+        Returns:
+            Optional[User]: The authenticated user if successful, None otherwise.
+        """
+        user = self.get_user_by_email(db, email)
+        if not user:
+            return None
+        if not verify_password(password, user.hashed_password):
+            return None
+        return user
 
 
-def verify_token(token: str) -> int:
-    try:
-        payload = jwt.decode(
-            token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
-        )
-        user_id: int = payload.get("sub")
-        if user_id is None:
-            raise HTTPException(status_code=401, detail="Invalid token")
-        return int(user_id)
-    except jwt.PyJWTError:
-        raise HTTPException(status_code=401, detail="Invalid token")
-
-
-def get_user_by_email(email: str, session: Session) -> User:
-    """
-    Get a user by email.
-    """
-    return session.query(User).filter(User.email == email).first()
+user_service = UserService(model=User)

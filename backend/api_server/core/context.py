@@ -4,18 +4,24 @@ This file centralizes all context variables used across the application.
 """
 from contextvars import ContextVar
 from typing import Optional
-from datetime import datetime
 
 # User context for current authenticated user
 current_user_context: ContextVar[Optional[int]] = ContextVar(
     "current_user_id", default=None
 )
-
-# Optional: Additional context variables
-request_id_context: ContextVar[Optional[str]] = ContextVar("request_id", default=None)
-request_start_time_context: ContextVar[Optional[datetime]] = ContextVar(
-    "request_start_time", default=None
+current_user_name_context: ContextVar[Optional[str]] = ContextVar(
+    "current_user_name", default=None
 )
+
+
+def get_current_user_name() -> Optional[str]:
+    """Get current user name from context"""
+    return current_user_name_context.get()
+
+
+def set_current_user_name(user_name: str) -> None:
+    """Set current user name in context"""
+    current_user_name_context.set(user_name)
 
 
 def get_current_user_id() -> Optional[int]:
@@ -31,3 +37,4 @@ def set_current_user_id(user_id: int) -> None:
 def clear_user_context() -> None:
     """Clear user context (useful for testing)"""
     current_user_context.set(None)
+    current_user_name_context.set(None)

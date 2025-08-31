@@ -1,3 +1,5 @@
+from api_server.core.context import get_current_user_name
+from api_server.core.security import get_password_hash
 from api_server.core.util import get_attribute_as_string
 from api_server.models.audit import AuditEntry, AuditEntryProperty
 from api_server.core.constant import AuditState
@@ -63,6 +65,10 @@ def _soft_delete_listener(session, flush_context, instances):
     Intercepts deletes and converts them to soft deletes.
     doc: https://docs.sqlalchemy.org/en/20/orm/events.html#sqlalchemy.orm.SessionEvents.before_flush
     """
+    current_user_name = get_current_user_name()
+    # If no user context is available, use a default value
+    if current_user_name is None:
+        current_user_name = "system"
 
     # audit tracker before soft delete
     # audit_tracker(session)
@@ -77,7 +83,7 @@ def _soft_delete_listener(session, flush_context, instances):
             obj.created_date = datetime.now(timezone.utc)
 
         if hasattr(obj, "created_by"):
-            obj.created_by = None
+            obj.created_by = current_user_name
 
     for obj in session.dirty:
         if hasattr(obj, "version"):
@@ -90,7 +96,7 @@ def _soft_delete_listener(session, flush_context, instances):
             obj.created_date = datetime.now(timezone.utc)
 
         if hasattr(obj, "updated_by"):
-            obj.created_by = None
+            obj.created_by = current_user_name
 
     # Iterate through all objects marked for deletion in this session
     for obj in session.deleted:
@@ -106,7 +112,7 @@ def _soft_delete_listener(session, flush_context, instances):
                 obj.deleted_at = datetime.now(timezone.utc)
 
             if hasattr(obj, "deleted_by"):
-                obj.deleted_by = None
+                obj.deleted_by = current_user_name
 
             if hasattr(obj, "is_deleted"):
                 obj.is_deleted = True
@@ -271,6 +277,7 @@ def _add_soft_delete_filter_listener(execute_state):
     Ref: https://docs.sqlalchemy.org/en/20/_modules/examples/extending_query/filter_public.html
     """
     # state ref => https://docs.sqlalchemy.org/en/20/orm/session_api.html#sqlalchemy.orm.ORMExecuteState
+    get_current_user_name()
     if (
         execute_state.is_select
         and not execute_state.is_column_load
@@ -335,21 +342,23 @@ def init_db(session: Session) -> None:
         user_in = User(
             user_name=settings.FIRST_SUPERUSER_USERNAME,
             email=settings.FIRST_SUPERUSER_EMAIL,
-            password=settings.FIRST_SUPERUSER_PASSWORD,
+            hashed_password=get_password_hash(settings.FIRST_SUPERUSER_PASSWORD),
+            is_superuser=True,
+            is_active=True,
         )
         session.add(user_in)
         session.commit()
 
-    user = (
-        session.query(User).filter(User.email == settings.FIRST_SUPERUSER_EMAIL).first()
-    )
-    if user:
-        user.user_name = "eeeee"
-        session.commit()
+    # user = (
+    #     session.query(User).filter(User.email == settings.FIRST_SUPERUSER_EMAIL).first()
+    # )
+    # if user:
+    #     user.user_name = "eeeee"
+    #     session.commit()
 
-    user = (
-        session.query(User).filter(User.email == settings.FIRST_SUPERUSER_EMAIL).first()
-    )
-    if user:
-        session.delete(user)
-        session.commit()
+    # user = (
+    #     session.query(User).filter(User.email == settings.FIRST_SUPERUSER_EMAIL).first()
+    # )
+    # if user:
+    #     session.delete(user)
+    #     session.commit()

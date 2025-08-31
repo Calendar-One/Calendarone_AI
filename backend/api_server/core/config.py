@@ -1,3 +1,4 @@
+from typing import List
 import os
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -9,11 +10,13 @@ class Settings(BaseSettings):
     )
 
     API_VERSION: str
+    ALLOWED_CORS_ORIGINS: List[str]
     ENV: str
 
     # auth jwt
     SECRET_KEY: str
     ALGORITHM: str
+    ACCESS_TOKEN_EXPIRE_MINUTES: int
 
     # super  user
     FIRST_SUPERUSER_USERNAME: str
