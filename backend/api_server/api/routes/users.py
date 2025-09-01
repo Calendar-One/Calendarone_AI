@@ -24,7 +24,7 @@ def get_users(
         session,
         UserBase(
             user_name=current_user.user_name + "_test",
-            email="test@tesdd1td.com",
+            email="test@tesdd1tddd.com",
             hashed_password="test",
             is_active=True,
             is_superuser=False,

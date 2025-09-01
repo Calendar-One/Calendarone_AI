@@ -1,6 +1,5 @@
 from typing import Annotated, Tuple
 from api_server.core.config import settings
-from api_server.core.context import get_current_user_name, set_current_user_name
 from api_server.core.log import get_logger
 from api_server.database import get_db
 from api_server.models.users import User
@@ -53,8 +52,6 @@ def get_token(token: str = Depends(oauth2_scheme)) -> TokenPayload:
             token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
         )
         token_data = TokenPayload(**payload)
-        if token_data.name:
-            set_current_user_name(token_data.name)
     except (jwt.JWTError, ValidationError):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
@@ -63,12 +60,12 @@ def get_token(token: str = Depends(oauth2_scheme)) -> TokenPayload:
     return token_data
 
 
-def get_sign_in_db_session(token: TokenPayload = Depends(get_token)) -> Session:
+def get_sign_in_db_session(token_data: TokenPayload = Depends(get_token)) -> Session:
     """
     Get the database session for sign in.
     """
     db = next(get_db())
-    logger.debug("getting sign in db session", get_current_user_name())
+    db.info["user_name"] = token_data.name
     try:
         yield db
     finally:
@@ -89,6 +86,8 @@ def get_current_user(
 
 
 CurrentUser = Annotated[User, Depends(get_current_user)]
-
+# public session for public routes
 SessionDep = Annotated[Session, Depends(get_db)]
+
+# session for private routes
 SignInDBSessionDep = Annotated[Session, Depends(get_sign_in_db_session)]
