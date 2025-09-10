@@ -1,10 +1,9 @@
-@layer theme, base, antd, components, utilities;
-
 @import 'tailwindcss';
+@import '@mantine/core/styles.css';
 
 #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
 }

@@ -4,6 +4,7 @@ from typing import Generator
 from api_server.database.session import SQLALCHEMY_DATABASE_URL, get_local_session
 from api_server.core.exceptions import SQLAlchemyException
 from api_server.core.log import get_logger
+from api_server.core.config import settings
 
 log = get_logger(__name__)
 
@@ -20,7 +21,8 @@ def get_db() -> Generator:  # pragma: no cover
     """
 
     log.debug("getting database session")
-    db = get_local_session(SQLALCHEMY_DATABASE_URL, False)()
+    echo = settings.ENV == "local" or settings.ENV == "test" or settings.ENV == "dev"
+    db = get_local_session(SQLALCHEMY_DATABASE_URL, echo)()
     try:
         yield db
     finally:  # pragma: no cover
@@ -45,7 +47,8 @@ def get_ctx_db(database_url: str) -> Generator:
 
     """
     log.debug("getting database session")
-    db = get_local_session(database_url)()
+    echo = settings.ENV == "local" or settings.ENV == "test" or settings.ENV == "dev"
+    db = get_local_session(database_url, echo)()
     try:
         yield db
     except Exception as e:
