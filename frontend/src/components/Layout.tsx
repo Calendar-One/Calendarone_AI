@@ -1,17 +1,19 @@
 import React from 'react';
 import { AppShell } from '@mantine/core';
-import Header from './Header';
-import Sidebar from './Sidebar';
-import Footer from './Footer';
+import Header from './Header.tsx';
+import Sidebar from './Sidebar.tsx';
+// import Footer from './Footer.tsx';
 
-const Layout = ({ children }) => {
+const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <AppShell
-      header={{ height: 70 }}
+      layout='alt'
+      header={{ height: 60 }}
       footer={{ height: 60 }}
       navbar={{ width: 256, breakpoint: 'sm' }}
+      // aside={{ width: 0, breakpoint: 'sm' }}
       padding='md'
-      className='bg-slate-950'
+      className='bg-white'
     >
       <AppShell.Header>
         <Header />
@@ -21,13 +23,13 @@ const Layout = ({ children }) => {
         <Sidebar />
       </AppShell.Navbar>
 
-      <AppShell.Main className='bg-slate-950 min-h-screen'>
+      <AppShell.Main>
         <div className='p-6'>{children}</div>
       </AppShell.Main>
 
-      <AppShell.Footer>
+      {/* <AppShell.Footer>
         <Footer />
-      </AppShell.Footer>
+      </AppShell.Footer> */}
     </AppShell>
   );
 };

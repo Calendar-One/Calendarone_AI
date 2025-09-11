@@ -1,20 +1,21 @@
-import React from 'react';
 import { Button, Group, Select, ActionIcon } from '@mantine/core';
 import { IconSettings, IconUser, IconPlus } from '@tabler/icons-react';
 
 const Header = () => {
   return (
-    <header className='bg-slate-900 border-b border-slate-700 px-6 py-4'>
-      <div className='flex items-center justify-between'>
+    <>
+      <div className='flex items-center justify-between h-full'>
         {/* Left side - Logo and context */}
         <div className='flex items-center space-x-6'>
           <div className='flex items-center space-x-2'>
-            <h1 className='text-xl font-semibold text-white'>Calendarone AI</h1>
-            <span className='text-sm text-slate-400'>v1.0.0</span>
+            <span className='text-sm font-semibold text-gray-900'>
+              Calendarone AI
+            </span>
+            <span className='text-xs text-gray-500'>v1.0.0</span>
           </div>
 
           <div className='flex items-center space-x-2'>
-            <span className='text-slate-300'>test</span>
+            <span className='text-gray-600'>test</span>
             <Select
               placeholder='Hobby'
               data={[
@@ -27,8 +28,8 @@ const Header = () => {
               styles={{
                 input: {
                   backgroundColor: 'transparent',
-                  border: '1px solid #475569',
-                  color: '#e2e8f0',
+                  border: '1px solid #d1d5db',
+                  color: '#374151',
                 },
               }}
             />
@@ -41,7 +42,7 @@ const Header = () => {
             variant='subtle'
             color='gray'
             size='lg'
-            className='text-slate-400 hover:text-white hover:bg-slate-800'
+            className='text-gray-500 hover:text-gray-900 hover:bg-gray-100'
           >
             <IconSettings size={20} />
           </ActionIcon>
@@ -50,7 +51,7 @@ const Header = () => {
             variant='subtle'
             color='gray'
             size='lg'
-            className='text-slate-400 hover:text-white hover:bg-slate-800'
+            className='text-gray-500 hover:text-gray-900 hover:bg-gray-100'
           >
             <IconUser size={20} />
           </ActionIcon>
@@ -64,7 +65,7 @@ const Header = () => {
           </Button>
         </Group>
       </div>
-    </header>
+    </>
   );
 };
 

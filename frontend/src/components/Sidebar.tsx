@@ -1,11 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   TextInput,
   NavLink,
   Avatar,
   Menu,
   Text,
-  Group,
   ActionIcon,
 } from '@mantine/core';
 import {
@@ -49,22 +48,23 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className='w-64 bg-slate-900 border-r border-slate-700 h-full flex flex-col'>
+    <aside className='w-64 h-full flex flex-col'>
       {/* Search */}
-      <div className='p-4 border-b border-slate-700'>
+      <div className='p-4 border-b border-gray-200' style={{ height: '60px' }}>
         <TextInput
           placeholder='Q Go to...'
           leftSection={<IconSearch size={16} />}
+          rightSectionWidth={50}
           rightSection={
-            <div className='text-xs text-slate-500 bg-slate-800 px-2 py-1 rounded'>
+            <div className='text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded w-full'>
               Ctrl K
             </div>
           }
           styles={{
             input: {
-              backgroundColor: '#1e293b',
-              border: '1px solid #475569',
-              color: '#e2e8f0',
+              backgroundColor: '#f9fafb',
+              border: '1px solid #d1d5db',
+              color: '#374151',
               '&:focus': {
                 borderColor: '#3b82f6',
               },
@@ -87,7 +87,7 @@ const Sidebar = () => {
               className={`rounded-lg transition-colors ${
                 active === item.value
                   ? 'bg-blue-600 text-white'
-                  : 'text-slate-300 hover:bg-slate-800 hover:text-white'
+                  : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
               }`}
               styles={{
                 root: {
@@ -95,11 +95,11 @@ const Sidebar = () => {
                     active === item.value ? '#2563eb' : 'transparent',
                   '&:hover': {
                     backgroundColor:
-                      active === item.value ? '#2563eb' : '#1e293b',
+                      active === item.value ? '#2563eb' : '#f3f4f6',
                   },
                 },
                 label: {
-                  color: active === item.value ? 'white' : '#cbd5e1',
+                  color: active === item.value ? 'white' : '#4b5563',
                 },
               }}
             />
@@ -108,20 +108,20 @@ const Sidebar = () => {
       </nav>
 
       {/* User Profile */}
-      <div className='p-4 border-t border-slate-700'>
+      <div className='p-4 border-t border-gray-200'>
         <Menu shadow='md' width={200} position='top-start'>
           <Menu.Target>
-            <div className='flex items-center space-x-3 p-2 rounded-lg hover:bg-slate-800 cursor-pointer transition-colors'>
+            <div className='flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors'>
               <Avatar
                 src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=40&h=40&fit=crop&crop=face'
                 size='sm'
                 radius='xl'
               />
               <div className='flex-1 min-w-0'>
-                <Text size='sm' fw={500} className='text-white truncate'>
+                <Text size='sm' fw={500} className='text-gray-900 truncate'>
                   hao
                 </Text>
-                <Text size='xs' className='text-slate-400 truncate'>
+                <Text size='xs' className='text-gray-500 truncate'>
                   skywalkeryin007@...
                 </Text>
               </div>
@@ -131,7 +131,7 @@ const Sidebar = () => {
             </div>
           </Menu.Target>
 
-          <Menu.Dropdown className='bg-slate-800 border-slate-700'>
+          <Menu.Dropdown className='bg-white border-gray-200'>
             <Menu.Item leftSection={<IconUser size={16} />}>Profile</Menu.Item>
             <Menu.Item leftSection={<IconSettings size={16} />}>
               Settings
