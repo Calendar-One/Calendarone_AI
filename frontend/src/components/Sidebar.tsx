@@ -49,10 +49,20 @@ const Sidebar = () => {
 
   return (
     <aside className='w-64 h-full flex flex-col'>
-      {/* Search */}
+      {/* Logo/ Title */}
       <div className='p-4 border-b border-gray-200' style={{ height: '60px' }}>
+        <div className='flex items-center space-x-2'>
+          <span className='text-lg font-semibold text-gray-900'>
+            Calendarone AI
+          </span>
+          <span className='text-xs text-gray-500'>v1.0.0</span>
+        </div>
+      </div>
+
+      {/* Search */}
+      <div className='p-4 border-gray-200' style={{ height: '60px' }}>
         <TextInput
-          placeholder='Q Go to...'
+          placeholder='Go to...'
           leftSection={<IconSearch size={16} />}
           rightSectionWidth={50}
           rightSection={

@@ -4,16 +4,9 @@ import { IconSettings, IconUser, IconPlus } from '@tabler/icons-react';
 const Header = () => {
   return (
     <>
-      <div className='flex items-center justify-between h-full'>
+      <div className='flex items-center justify-between h-full px-6'>
         {/* Left side - Logo and context */}
         <div className='flex items-center space-x-6'>
-          <div className='flex items-center space-x-2'>
-            <span className='text-sm font-semibold text-gray-900'>
-              Calendarone AI
-            </span>
-            <span className='text-xs text-gray-500'>v1.0.0</span>
-          </div>
-
           <div className='flex items-center space-x-2'>
             <span className='text-gray-600'>test</span>
             <Select
