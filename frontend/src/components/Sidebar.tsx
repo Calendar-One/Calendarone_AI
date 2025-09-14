@@ -48,25 +48,25 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className='w-64 h-full flex flex-col'>
+    <aside className='w-full h-full flex flex-col bg-white dark:bg-gray-900'>
       {/* Logo/ Title */}
-      <div className='p-4 border-b border-gray-200' style={{ height: '60px' }}>
+      <div className='p-4 border-b border-gray-200 dark:border-gray-700' style={{ height: '60px' }}>
         <div className='flex items-center space-x-2'>
-          <span className='text-lg font-semibold text-gray-900'>
+          <span className='text-lg font-semibold text-gray-900 dark:text-white'>
             Calendarone AI
           </span>
-          <span className='text-xs text-gray-500'>v1.0.0</span>
+          <span className='text-xs text-gray-500 dark:text-gray-400'>v1.0.0</span>
         </div>
       </div>
 
       {/* Search */}
-      <div className='p-4 border-gray-200' style={{ height: '60px' }}>
+      <div className='p-4 border-gray-200 dark:border-gray-700' style={{ height: '60px' }}>
         <TextInput
           placeholder='Go to...'
           leftSection={<IconSearch size={16} />}
           rightSectionWidth={50}
           rightSection={
-            <div className='text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded w-full'>
+            <div className='text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded w-full'>
               Ctrl K
             </div>
           }
@@ -97,7 +97,7 @@ const Sidebar = () => {
               className={`rounded-lg transition-colors ${
                 active === item.value
                   ? 'bg-blue-600 text-white'
-                  : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                  : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white'
               }`}
               styles={{
                 root: {
@@ -118,20 +118,20 @@ const Sidebar = () => {
       </nav>
 
       {/* User Profile */}
-      <div className='p-4 border-t border-gray-200'>
+      <div className='p-4 border-t border-gray-200 dark:border-gray-700'>
         <Menu shadow='md' width={200} position='top-start'>
           <Menu.Target>
-            <div className='flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 cursor-pointer transition-colors'>
+            <div className='flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer transition-colors'>
               <Avatar
                 src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=40&h=40&fit=crop&crop=face'
                 size='sm'
                 radius='xl'
               />
               <div className='flex-1 min-w-0'>
-                <Text size='sm' fw={500} className='text-gray-900 truncate'>
+                <Text size='sm' fw={500} className='text-gray-900 dark:text-white truncate'>
                   hao
                 </Text>
-                <Text size='xs' className='text-gray-500 truncate'>
+                <Text size='xs' className='text-gray-500 dark:text-gray-400 truncate'>
                   skywalkeryin007@...
                 </Text>
               </div>
@@ -141,7 +141,7 @@ const Sidebar = () => {
             </div>
           </Menu.Target>
 
-          <Menu.Dropdown className='bg-white border-gray-200'>
+          <Menu.Dropdown className='bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700'>
             <Menu.Item leftSection={<IconUser size={16} />}>Profile</Menu.Item>
             <Menu.Item leftSection={<IconSettings size={16} />}>
               Settings

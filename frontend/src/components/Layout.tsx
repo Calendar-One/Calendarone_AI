@@ -13,7 +13,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       navbar={{ width: 256, breakpoint: 'sm' }}
       // aside={{ width: 0, breakpoint: 'sm' }}
       padding='md'
-      className='bg-white'
+      className='bg-white dark:bg-slate-900'
     >
       <AppShell.Header>
         <Header />
