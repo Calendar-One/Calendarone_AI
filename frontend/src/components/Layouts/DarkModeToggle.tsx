@@ -6,7 +6,7 @@ import { IconSun, IconMoon } from '@tabler/icons-react';
 import { useEffect } from 'react';
 
 
-const DarkModeToggle = () => {
+const DarkModeToggle = ( ) => {
   const { setColorScheme, colorScheme, toggleColorScheme } =
     useMantineColorScheme();
 

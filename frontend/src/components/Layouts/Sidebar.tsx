@@ -10,57 +10,81 @@ import {
 import {
   IconSearch,
   IconGrid3x3,
-  IconStar,
   IconSettings,
   IconHeadset,
   IconChevronDown,
   IconUser,
 } from '@tabler/icons-react';
+import { useAuth } from '../../contexts/AuthContext';
+import { useAppNavigation } from '../../hooks/useAppNavigation';
 
 const Sidebar = () => {
-  const [active, setActive] = useState('projects');
+  const { user, logout } = useAuth();
+  const nav = useAppNavigation();
+
+  const handleLogout = () => {
+    logout();
+    nav.goToHome();
+  };
+
+  const [active, setActive] = useState('dashboard');
 
   const navigationItems = [
     {
       icon: IconGrid3x3,
-      label: 'Projects',
-      value: 'projects',
-      description: 'Manage your projects',
+      label: 'Dashboard',
+      value: 'dashboard',
+      description: 'View your calendar and events',
+      to: nav.routes.DASHBOARD,
     },
     {
-      icon: IconStar,
-      label: 'Upgrade',
-      value: 'upgrade',
-      description: 'Upgrade your plan',
+      icon: IconUser,
+      label: 'Profile',
+      value: 'profile',
+      description: 'Manage your profile',
+      to: nav.routes.PROFILE,
     },
     {
       icon: IconSettings,
       label: 'Settings',
       value: 'settings',
       description: 'Configure your account',
+      to: nav.routes.SETTINGS,
     },
     {
       icon: IconHeadset,
       label: 'Support',
       value: 'support',
       description: 'Get help and support',
+      to: '/support', // You can add this route later
     },
   ];
 
   return (
     <aside className='w-full h-full flex flex-col bg-white dark:bg-gray-900'>
       {/* Logo/ Title */}
-      <div className='p-4 border-b border-gray-200 dark:border-gray-700' style={{ height: '60px' }}>
-        <div className='flex items-center space-x-2'>
+      <div
+        className='p-4 border-b border-gray-200 dark:border-gray-700'
+        style={{ height: '60px' }}
+      >
+        <div 
+          className='flex items-center space-x-2 cursor-pointer'
+          onClick={() => nav.goToDashboard()}
+        >
           <span className='text-lg font-semibold text-gray-900 dark:text-white'>
             Calendarone AI
           </span>
-          <span className='text-xs text-gray-500 dark:text-gray-400'>v1.0.0</span>
+          <span className='text-xs text-gray-500 dark:text-gray-400'>
+            v1.0.0
+          </span>
         </div>
       </div>
 
       {/* Search */}
-      <div className='p-4 border-gray-200 dark:border-gray-700' style={{ height: '60px' }}>
+      <div
+        className='p-4 border-gray-200 dark:border-gray-700'
+        style={{ height: '60px' }}
+      >
         <TextInput
           placeholder='Go to...'
           leftSection={<IconSearch size={16} />}
@@ -89,29 +113,35 @@ const Sidebar = () => {
           {navigationItems.map(item => (
             <NavLink
               key={item.value}
-              href='#'
+              // href={item.to}
+              // to={item.to}
               label={item.label}
               leftSection={<item.icon size={20} />}
               active={active === item.value}
-              onClick={() => setActive(item.value)}
+              onClick={() => {
+                setActive(item.value);
+                if (item.to) {
+                  nav.push(item.to);
+                }
+              }}
               className={`rounded-lg transition-colors ${
                 active === item.value
                   ? 'bg-blue-600 text-white'
                   : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-800 dark:hover:text-white'
               }`}
-              styles={{
-                root: {
-                  backgroundColor:
-                    active === item.value ? '#2563eb' : 'transparent',
-                  '&:hover': {
-                    backgroundColor:
-                      active === item.value ? '#2563eb' : '#f3f4f6',
-                  },
-                },
-                label: {
-                  color: active === item.value ? 'white' : '#4b5563',
-                },
-              }}
+              // styles={{
+              //   root: {
+              //     backgroundColor:
+              //       active === item.value ? '#2563eb' : 'transparent',
+              //     '&:hover': {
+              //       backgroundColor:
+              //         active === item.value ? '#2563eb' : '#f3f4f6',
+              //     },
+              //   },
+              //   label: {
+              //     color: active === item.value ? 'white' : '#4b5563',
+              //   },
+              // }}
             />
           ))}
         </div>
@@ -123,16 +153,26 @@ const Sidebar = () => {
           <Menu.Target>
             <div className='flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer transition-colors'>
               <Avatar
-                src='https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=40&h=40&fit=crop&crop=face'
+                src={
+                  user?.avatar ||
+                  'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=40&h=40&fit=crop&crop=face'
+                }
                 size='sm'
                 radius='xl'
               />
               <div className='flex-1 min-w-0'>
-                <Text size='sm' fw={500} className='text-gray-900 dark:text-white truncate'>
-                  hao
+                <Text
+                  size='sm'
+                  fw={500}
+                  className='text-gray-900 dark:text-white truncate'
+                >
+                  {user?.name}
                 </Text>
-                <Text size='xs' className='text-gray-500 dark:text-gray-400 truncate'>
-                  skywalkeryin007@...
+                <Text
+                  size='xs'
+                  className='text-gray-500 dark:text-gray-400 truncate'
+                >
+                  {user?.email}
                 </Text>
               </div>
               <ActionIcon variant='subtle' color='gray' size='sm'>
@@ -142,12 +182,23 @@ const Sidebar = () => {
           </Menu.Target>
 
           <Menu.Dropdown className='bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700'>
-            <Menu.Item leftSection={<IconUser size={16} />}>Profile</Menu.Item>
-            <Menu.Item leftSection={<IconSettings size={16} />}>
+            <Menu.Item 
+              leftSection={<IconUser size={16} />}
+              onClick={() => nav.goToProfile()}
+            >
+              Profile
+            </Menu.Item>
+            <Menu.Item 
+              leftSection={<IconSettings size={16} />}
+              onClick={() => nav.goToSettings()}
+            >
               Settings
             </Menu.Item>
+
             <Menu.Divider />
-            <Menu.Item color='red'>Sign out</Menu.Item>
+            <Menu.Item color='red' onClick={handleLogout}>
+              Sign out
+            </Menu.Item>
           </Menu.Dropdown>
         </Menu>
       </div>

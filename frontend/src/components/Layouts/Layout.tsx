@@ -24,7 +24,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       </AppShell.Navbar>
 
       <AppShell.Main>
-        <div className='p-6'>{children}</div>
+        <>{children}</>
       </AppShell.Main>
 
       {/* <AppShell.Footer>
