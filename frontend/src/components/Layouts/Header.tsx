@@ -1,13 +1,29 @@
-import { Group } from '@mantine/core';
+import { Group, ActionIcon } from '@mantine/core';
+import { IconLayoutSidebarLeftCollapse } from '@tabler/icons-react';
 
 import DarkModeToggle from './DarkModeToggle';
 
-const Header = () => {
+interface HeaderProps {
+  onToggleSidebar: () => void;
+  sidebarCollapsed: boolean;
+}
+
+const Header = ({ onToggleSidebar, sidebarCollapsed }: HeaderProps) => {
   return (
     <>
       <div className='flex items-center justify-between h-full px-6 bg-white dark:bg-gray-900 dark:border-gray-700'>
-        {/* Left side - Logo and navigation */}
-        <div className='flex items-center space-x-6'>
+        {/* Left side - Menu toggle and navigation */}
+        <div className='flex items-center space-x-4'>
+          <ActionIcon
+            variant='subtle'
+            color='gray'
+            size='lg'
+            onClick={onToggleSidebar}
+            className='hover:bg-gray-100 dark:hover:bg-gray-800'
+          >
+            <IconLayoutSidebarLeftCollapse size={20} />
+          </ActionIcon>
+
           {/* <Link to='/dashboard' className='flex items-center space-x-2'>
             <span className='text-xl font-bold text-gray-900 dark:text-white'>
               Calendarone AI
