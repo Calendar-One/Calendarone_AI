@@ -13,15 +13,15 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
 
   if (isLoading) {
     return (
-      <Center h="100vh">
-        <Loader size="lg" />
+      <Center h='100vh'>
+        <Loader size='lg' />
       </Center>
     );
   }
 
   if (!isAuthenticated) {
     // Redirect to login page with return url
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return <Navigate to='/login' state={{ from: location }} replace />;
   }
 
   return <>{children}</>;

@@ -16,8 +16,8 @@ import {
   IconChevronDown,
   IconUser,
 } from '@tabler/icons-react';
-import { useAuth } from '../../contexts/AuthContext';
-import { useAppNavigation } from '../../hooks/useAppNavigation';
+import { useAuth } from '@/contexts/AuthContext';
+import { useAppNavigation } from '@/hooks/useAppNavigation';
 
 interface SidebarProps {
   collapsed: boolean;
