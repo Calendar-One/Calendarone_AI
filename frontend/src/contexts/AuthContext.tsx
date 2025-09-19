@@ -1,3 +1,4 @@
+import { loginApi } from '@/features/auth/api/login';
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 interface User {
@@ -11,8 +12,12 @@ interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<boolean>;
-  register: (name: string, email: string, password: string) => Promise<boolean>;
+  login: (username: string, password: string) => Promise<boolean>;
+  register: (
+    name: string,
+    username: string,
+    password: string
+  ) => Promise<boolean>;
   logout: () => void;
 }
 
@@ -58,28 +63,34 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     checkAuth();
   }, []);
 
-  const login = async (email: string, password: string): Promise<boolean> => {
+  const login = async (
+    username: string,
+    password: string
+  ): Promise<boolean> => {
     try {
       setIsLoading(true);
-      
+
       // Simulate API call - replace with actual authentication
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      // await new Promise(resolve => setTimeout(resolve, 1000));
+
+      const response = await loginApi({ data: { username, password } });
+
       // Mock authentication - in real app, validate with backend
-      if (email === 'demo@example.com' && password === 'password') {
+      if (!!response) {
         const userData: User = {
           id: '1',
           name: 'Demo User',
-          email: email,
-          avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=40&h=40&fit=crop&crop=face'
+          email: username,
+          avatar:
+            'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=40&h=40&fit=crop&crop=face',
         };
-        
+
         setUser(userData);
         localStorage.setItem('auth_token', 'mock_token_123');
         localStorage.setItem('user_data', JSON.stringify(userData));
         return true;
       }
-      
+
       return false;
     } catch (error) {
       console.error('Login failed:', error);
@@ -89,21 +100,26 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }
   };
 
-  const register = async (name: string, email: string, password: string): Promise<boolean> => {
+  const register = async (
+    name: string,
+    email: string,
+    password: string
+  ): Promise<boolean> => {
     try {
       setIsLoading(true);
-      
+
       // Simulate API call - replace with actual registration
       await new Promise(resolve => setTimeout(resolve, 1000));
-      
+
       // Mock registration - in real app, create user via backend
       const userData: User = {
         id: Date.now().toString(),
         name: name,
         email: email,
-        avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=40&h=40&fit=crop&crop=face'
+        avatar:
+          'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=40&h=40&fit=crop&crop=face',
       };
-      
+
       setUser(userData);
       localStorage.setItem('auth_token', 'mock_token_123');
       localStorage.setItem('user_data', JSON.stringify(userData));
@@ -131,9 +147,5 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     logout,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

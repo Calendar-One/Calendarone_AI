@@ -27,7 +27,6 @@ module.exports = {
           {
             zones: [
               // Previous restrictions...
-
               // enforce unidirectional codebase:
               // e.g. src/app can import from src/features but not the other way around
               {

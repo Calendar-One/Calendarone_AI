@@ -1,6 +1,6 @@
 from api_server.api.mian import api_router
 from api_server.schemas.base import ApiResponse
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import APIRouter, FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 from api_server.core.config import settings
 from api_server.core.log import get_logger
@@ -43,16 +43,23 @@ if settings.ALLOWED_CORS_ORIGINS:
         allow_headers=["*"],
     )
 
-app.include_router(api_router, prefix="/" + settings.API_VERSION)
+
+def_router = APIRouter(tags=["health"])
 
 
-@app.get("/")
+@def_router.get("/")
 async def root():
     """Root endpoint"""
     return {"message": "Hello World", "version": settings.API_VERSION}
 
 
-@app.get("/health")
+@def_router.get("/health")
 async def health_check():
     """Health check endpoint"""
     return {"status": "healthy", "environment": settings.ENV}
+
+
+api_router.include_router(def_router)
+
+
+app.include_router(api_router, prefix="/" + settings.API_VERSION)

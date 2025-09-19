@@ -9,6 +9,7 @@ import LandingPage from '@/app/pages/LandingPage';
 import LoginPage from '@/app/pages/public/LoginPage';
 import RegisterPage from '@/app/pages/public/RegisterPage';
 import DashboardPage from '@/app/pages/DashboardPage';
+import { Notifications } from '@mantine/notifications';
 
 // Create router configuration
 const router = createBrowserRouter([
@@ -95,6 +96,7 @@ const router = createBrowserRouter([
 const AppRouter = () => {
   return (
     <MantineProvider>
+      <Notifications />
       <AuthProvider>
         <RouterProvider router={router} />
       </AuthProvider>

@@ -1,13 +1,13 @@
-
 /*https://github.com/orgs/mantinedev/discussions/7459 */
 @import 'tailwindcss';
 @import '@mantine/core/styles.css';
 
+/* ‼️ import notifications styles after core package styles */
+@import '@mantine/notifications/styles.css';
 
 /* Ensure proper dark mode styling for html element */
 /* Tailwind dark mode support */
 @custom-variant dark (&:where([data-mantine-color-scheme=dark], [data-mantine-color-scheme=dark] *));
-
 
 :root {
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;

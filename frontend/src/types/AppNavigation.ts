@@ -33,29 +33,29 @@ export interface NavigationFunctions {
 }
 
 // Route validation utility
-export const isValidRoute = (path: string): path is RoutePath => {
-  return Object.values(ROUTES).includes(path as RoutePath);
-};
+// export const isValidRoute = (path: string): path is RoutePath => {
+//   return Object.values(ROUTES).includes(path as RoutePath);
+// };
 
-// Get route name from path
-export const getRouteName = (path: string): string => {
-  const routeEntries = Object.entries(ROUTES);
-  const routeEntry = routeEntries.find(([, routePath]) => routePath === path);
-  return routeEntry ? routeEntry[0] : 'UNKNOWN';
-};
+// // Get route name from path
+// export const getRouteName = (path: string): string => {
+//   const routeEntries = Object.entries(ROUTES);
+//   const routeEntry = routeEntries.find(([, routePath]) => routePath.path === path);
+//   return routeEntry ? routeEntry[0] : 'UNKNOWN';
+// };
 
-// Check if route is public (doesn't require authentication)
-export const isPublicRoute = (path: string): boolean => {
-  const publicRoutes: string[] = [ROUTES.HOME, ROUTES.LOGIN, ROUTES.REGISTER];
-  return publicRoutes.includes(path);
-};
+// // Check if route is public (doesn't require authentication)
+// export const isPublicRoute = (path: string): boolean => {
+//   const publicRoutes: string[] = [ROUTES.HOME, ROUTES.LOGIN, ROUTES.REGISTER];
+//   return publicRoutes.includes(path);
+// };
 
 // Check if route is protected (requires authentication)
 export const isProtectedRoute = (path: string): boolean => {
   const protectedRoutes: string[] = [
-    ROUTES.DASHBOARD,
-    ROUTES.PROFILE,
-    ROUTES.SETTINGS,
+    ROUTES.app.dashboard.path,
+    ROUTES.app.profile.path,
+    ROUTES.app.settings.path,
   ];
   return protectedRoutes.includes(path);
 };
@@ -63,8 +63,8 @@ export const isProtectedRoute = (path: string): boolean => {
 // Navigation constants for easy reference
 export const NAVIGATION = {
   ROUTES,
-  isValidRoute,
-  getRouteName,
-  isPublicRoute,
+  // isValidRoute,
+  // getRouteName,
+  // isPublicRoute,
   isProtectedRoute,
 } as const;

@@ -3,20 +3,20 @@ import { ROUTES } from '../config/router';
 import type { NavigationFunctions } from '../types/AppNavigation';
 
 // Custom hook that provides navigation functions
-export const useAppNavigation = () : NavigationFunctions => {
+export const useAppNavigation = (): NavigationFunctions => {
   const navigate = useNavigate();
 
   return {
     routes: ROUTES,
     // Public routes
-    goToHome: () => navigate(ROUTES.HOME),
-    goToLogin: () => navigate(ROUTES.LOGIN),
-    goToRegister: () => navigate(ROUTES.REGISTER),
+    goToHome: () => navigate(ROUTES.home.path),
+    goToLogin: () => navigate(ROUTES.auth.login.path),
+    goToRegister: () => navigate(ROUTES.auth.register.path),
 
     // Protected routes
-    goToDashboard: () => navigate(ROUTES.DASHBOARD),
-    goToProfile: () => navigate(ROUTES.PROFILE),
-    goToSettings: () => navigate(ROUTES.SETTINGS),
+    goToDashboard: () => navigate(ROUTES.app.dashboard.path),
+    goToProfile: () => navigate(ROUTES.app.profile.path),
+    goToSettings: () => navigate(ROUTES.app.settings.path),
 
     // Utility functions
     goBack: () => navigate(-1),
@@ -26,12 +26,12 @@ export const useAppNavigation = () : NavigationFunctions => {
 
     // Navigation with state
     goToLoginWithReturnUrl: (returnUrl?: string) => {
-      navigate(ROUTES.LOGIN, {
+      navigate(ROUTES.auth.login.path, {
         state: { from: returnUrl || window.location.pathname },
       });
     },
     goToDashboardWithState: (state?: any) => {
-      navigate(ROUTES.DASHBOARD, { state });
+      navigate(ROUTES.app.dashboard.path, { state });
     },
   };
 };
