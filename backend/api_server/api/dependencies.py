@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from typing import Annotated, Tuple
 from api_server.core.config import settings
 from api_server.core.log import get_logger
@@ -52,6 +53,15 @@ def get_token(token: str = Depends(oauth2_scheme)) -> TokenPayload:
             token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
         )
         token_data = TokenPayload(**payload)
+
+        # Check if token is expired
+        current_time = datetime.now(timezone.utc)
+        if token_data.exp and token_data.exp < current_time:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="access token expired",
+            )
+
     except (jwt.JWTError, ValidationError):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,

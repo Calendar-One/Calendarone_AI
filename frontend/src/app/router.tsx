@@ -1,32 +1,31 @@
 import { createBrowserRouter, RouterProvider } from 'react-router';
-import { MantineProvider } from '@mantine/core';
-import { AuthProvider } from '@/contexts/AuthContext';
-import ProtectedRoute from '@/components/Auth/ProtectedRoute';
 import Layout from '@/components/Layouts/Layout';
+import { ProtectedRoute } from '@/libs/auth';
 
 // Import pages
 import LandingPage from '@/app/pages/LandingPage';
 import LoginPage from '@/app/pages/public/LoginPage';
 import RegisterPage from '@/app/pages/public/RegisterPage';
 import DashboardPage from '@/app/pages/DashboardPage';
-import { Notifications } from '@mantine/notifications';
+
+import { ROUTES } from '@/config/router';
 
 // Create router configuration
 const router = createBrowserRouter([
   {
-    path: '/',
+    path: ROUTES.home.path,
     element: <LandingPage />,
   },
   {
-    path: '/login',
+    path: ROUTES.auth.login.path,
     element: <LoginPage />,
   },
   {
-    path: '/register',
+    path: ROUTES.auth.register.path,
     element: <RegisterPage />,
   },
   {
-    path: '/dashboard',
+    path: ROUTES.app.dashboard.path,
     element: (
       <ProtectedRoute>
         <Layout>
@@ -36,7 +35,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: '/profile',
+    path: ROUTES.app.profile.path,
     element: (
       <ProtectedRoute>
         <Layout>
@@ -53,7 +52,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: '/settings',
+    path: ROUTES.app.settings.path,
     element: (
       <ProtectedRoute>
         <Layout>
@@ -94,14 +93,7 @@ const router = createBrowserRouter([
 
 // Main Router Component
 const AppRouter = () => {
-  return (
-    <MantineProvider>
-      <Notifications />
-      <AuthProvider>
-        <RouterProvider router={router} />
-      </AuthProvider>
-    </MantineProvider>
-  );
+  return <RouterProvider router={router} />;
 };
 
 export default AppRouter;

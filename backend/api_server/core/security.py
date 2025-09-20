@@ -1,3 +1,4 @@
+import secrets
 from datetime import datetime, timedelta, timezone
 from typing import Any, Union
 
@@ -67,3 +68,52 @@ def get_password_hash(password: str) -> str:
         str: The hash value of the password.
     """
     return pwd_context.hash(password)
+
+
+def create_refresh_token() -> str:
+    """
+    Creates a refresh token using cryptographically secure random bytes.
+
+    Returns:
+        str: The refresh token.
+    """
+    return secrets.token_urlsafe(32)
+
+
+def verify_refresh_token(token: str, user_refresh_token: str) -> bool:
+    """
+    Verify if a refresh token matches the user's stored refresh token.
+
+    Parameters:
+        token (str): The refresh token to verify.
+        user_refresh_token (str): The user's stored refresh token.
+
+    Returns:
+        bool: True if the refresh token matches, False otherwise.
+    """
+    return token == user_refresh_token
+
+
+def is_refresh_token_expired(expires_at: datetime) -> bool:
+    """
+    Check if a refresh token has expired.
+
+    Parameters:
+        expires_at (datetime): The expiration datetime of the refresh token.
+
+    Returns:
+        bool: True if the token is expired, False otherwise.
+    """
+    if expires_at is None:
+        return True
+    return datetime.now(timezone.utc) > expires_at
+
+
+def get_refresh_token_expiration() -> datetime:
+    """
+    Get the expiration datetime for a new refresh token.
+
+    Returns:
+        datetime: The expiration datetime for the refresh token.
+    """
+    return datetime.now(timezone.utc) + timedelta(days=settings.REFRESH_TOKEN_EXPIRE_DAYS)

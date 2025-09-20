@@ -16,15 +16,16 @@ import {
   IconChevronDown,
   IconUser,
 } from '@tabler/icons-react';
-import { useAuth } from '@/contexts/AuthContext';
 import { useAppNavigation } from '@/hooks/useAppNavigation';
+import { useUser, useLogout } from '@/libs/auth';
 
 interface SidebarProps {
   collapsed: boolean;
 }
 
 const Sidebar = ({ collapsed }: SidebarProps) => {
-  const { user, logout } = useAuth();
+  const { data: user } = useUser();
+  const { mutate: logout } = useLogout();
   const nav = useAppNavigation();
 
   const handleLogout = () => {
@@ -40,21 +41,21 @@ const Sidebar = ({ collapsed }: SidebarProps) => {
       label: 'Dashboard',
       value: 'dashboard',
       description: 'View your calendar and events',
-      to: nav.routes.DASHBOARD,
+      to: nav.routes.app.dashboard.path,
     },
     {
       icon: IconUser,
       label: 'Profile',
       value: 'profile',
       description: 'Manage your profile',
-      to: nav.routes.PROFILE,
+      to: nav.routes.app.profile.path,
     },
     {
       icon: IconSettings,
       label: 'Settings',
       value: 'settings',
       description: 'Configure your account',
-      to: nav.routes.SETTINGS,
+      to: nav.routes.app.settings.path,
     },
     {
       icon: IconHeadset,
@@ -197,13 +198,13 @@ const Sidebar = ({ collapsed }: SidebarProps) => {
         } border-t border-gray-200 dark:border-gray-700`}
       >
         {collapsed ? (
-          <Tooltip label={`${user?.name} (${user?.email})`} position='right'>
+          <Tooltip label={`${user?.user_name} (${user?.email})`} position='right'>
             <Menu shadow='md' width={200} position='top-start'>
               <Menu.Target>
                 <div className='flex justify-center'>
                   <Avatar
                     src={
-                      user?.avatar ||
+                  
                       'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=40&h=40&fit=crop&crop=face'
                     }
                     size='sm'
@@ -240,7 +241,7 @@ const Sidebar = ({ collapsed }: SidebarProps) => {
               <div className='flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer transition-colors'>
                 <Avatar
                   src={
-                    user?.avatar ||
+          
                     'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=40&h=40&fit=crop&crop=face'
                   }
                   size='sm'
@@ -252,7 +253,7 @@ const Sidebar = ({ collapsed }: SidebarProps) => {
                     fw={500}
                     className='text-gray-900 dark:text-white truncate'
                   >
-                    {user?.name}
+                    {user?.user_name}
                   </Text>
                   <Text
                     size='xs'

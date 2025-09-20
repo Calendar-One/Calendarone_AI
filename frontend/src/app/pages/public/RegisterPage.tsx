@@ -14,7 +14,7 @@ import {
 } from '@mantine/core';
 import { IconAlertCircle, IconArrowLeft } from '@tabler/icons-react';
 import { Link, useNavigate } from 'react-router';
-import { useAuth } from '@/contexts/AuthContext';
+import { useRegister } from '@/libs/auth';
 
 const RegisterPage = () => {
   const [name, setName] = useState('');
@@ -24,7 +24,7 @@ const RegisterPage = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const { register } = useAuth();
+  const { mutate: register } = useRegister();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -44,8 +44,8 @@ const RegisterPage = () => {
     setIsLoading(true);
 
     try {
-      const success = await register(name, email, password);
-      if (success) {
+      const success = await register({user_name: name, email, password});
+      if (success.user_name) {
         navigate('/dashboard');
       } else {
         setError('Registration failed. Please try again.');

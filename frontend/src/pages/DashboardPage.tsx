@@ -1,3 +1,4 @@
+import { useUser } from '@/libs/auth';
 import {
   Container,
   Title,
@@ -19,10 +20,10 @@ import {
   IconClock,
   IconUsers,
 } from '@tabler/icons-react';
-import { useAuth } from '../contexts/AuthContext';
+
 
 const DashboardPage = () => {
-  const { user } = useAuth();
+  const { data: user } = useUser();
 
   // Mock data for demonstration
   const upcomingEvents = [
@@ -45,7 +46,7 @@ const DashboardPage = () => {
           <Group justify='space-between' align='center'>
             <div>
               <Title order={1} className='text-gray-900 dark:text-white'>
-                Welcome back, {user?.name}!
+                Welcome back, {user?.user_name}!
               </Title>
               <Text className='text-gray-600 dark:text-gray-300'>
                 Here's what's happening with your calendar today.

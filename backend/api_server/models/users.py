@@ -1,4 +1,5 @@
-from sqlalchemy import Boolean, Integer, String
+from datetime import datetime
+from sqlalchemy import Boolean, Integer, String, DateTime
 from sqlalchemy.orm import Mapped, mapped_column
 from .base import BaseModel
 
@@ -15,6 +16,8 @@ class User(BaseModel):
     email: Mapped[str] = mapped_column(String(255), nullable=False, unique=True)
 
     hashed_password: Mapped[str] = mapped_column(String, nullable=False)
+    refresh_token: Mapped[str] = mapped_column(String, nullable=True)
+    refresh_token_expires_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
 
     is_active: Mapped[bool] = mapped_column(Boolean, default=True)
     is_superuser: Mapped[bool] = mapped_column(Boolean, default=False)

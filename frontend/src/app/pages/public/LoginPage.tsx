@@ -14,7 +14,7 @@ import {
 } from '@mantine/core';
 import { IconAlertCircle, IconArrowLeft } from '@tabler/icons-react';
 import { Link, useNavigate } from 'react-router';
-import { useAuth } from '@/contexts/AuthContext';
+import { useLogin } from '@/libs/auth';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -22,7 +22,7 @@ const LoginPage = () => {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const { login } = useAuth();
+  const { mutate: login } = useLogin();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -31,7 +31,7 @@ const LoginPage = () => {
     setIsLoading(true);
 
     try {
-      const success = await login(email, password);
+      const success = await login({username: email, password});
       if (success) {
         navigate('/dashboard');
       } else {
@@ -76,7 +76,7 @@ const LoginPage = () => {
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   required
-                  type='email'
+                  // type='email'
                   className='dark:text-white'
                 />
 

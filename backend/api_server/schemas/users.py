@@ -125,7 +125,6 @@ class UserCreateRequest(UserBase):
 
         return v
 
-
 class UserResponse(BaseModel):
     """
     DTO for user response (without sensitive data).
@@ -134,6 +133,9 @@ class UserResponse(BaseModel):
     user_id: int = Field(..., description="User's unique identifier")
     user_name: str = Field(..., description="User's display name")
     email: EmailStr = Field(..., description="User's email address")
+    refresh_token: str = Field(..., description="User's refresh token")
+    is_active: bool = Field(..., description="User's active status")
+    is_superuser: bool = Field(..., description="User's superuser status")
 
     class Config:
         from_attributes = True
