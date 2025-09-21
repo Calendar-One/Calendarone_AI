@@ -29,7 +29,7 @@ const Sidebar = ({ collapsed }: SidebarProps) => {
   const nav = useAppNavigation();
 
   const handleLogout = () => {
-    logout();
+    logout({});
     nav.goToHome();
   };
 
@@ -198,13 +198,15 @@ const Sidebar = ({ collapsed }: SidebarProps) => {
         } border-t border-gray-200 dark:border-gray-700`}
       >
         {collapsed ? (
-          <Tooltip label={`${user?.user_name} (${user?.email})`} position='right'>
+          <Tooltip
+            label={`${user?.user_name} (${user?.email})`}
+            position='right'
+          >
             <Menu shadow='md' width={200} position='top-start'>
               <Menu.Target>
                 <div className='flex justify-center'>
                   <Avatar
                     src={
-                  
                       'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=40&h=40&fit=crop&crop=face'
                     }
                     size='sm'
@@ -241,7 +243,6 @@ const Sidebar = ({ collapsed }: SidebarProps) => {
               <div className='flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 cursor-pointer transition-colors'>
                 <Avatar
                   src={
-          
                     'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=40&h=40&fit=crop&crop=face'
                   }
                   size='sm'

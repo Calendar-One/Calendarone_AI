@@ -19,29 +19,22 @@ import { useLogin } from '@/libs/auth';
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
 
-  const { mutate: login } = useLogin();
   const navigate = useNavigate();
+
+  const {
+    mutate: loginMutate,
+    error,
+    isPending,
+  } = useLogin({
+    onSuccess: () => {
+      navigate('/dashboard');
+    },
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
-    setIsLoading(true);
-
-    try {
-      const success = await login({username: email, password});
-      if (success) {
-        navigate('/dashboard');
-      } else {
-        setError('Invalid email or password');
-      }
-    } catch (err) {
-      setError('An error occurred during login');
-    } finally {
-      setIsLoading(false);
-    }
+    loginMutate({ username: email, password });
   };
 
   return (
@@ -58,13 +51,13 @@ const LoginPage = () => {
               </Text>
             </div>
 
-            {error && (
+            {!!error && (
               <Alert
                 icon={<IconAlertCircle size={16} />}
                 color='red'
                 variant='light'
               >
-                {error}
+                {error?.response?.data?.message}
               </Alert>
             )}
 
@@ -93,7 +86,7 @@ const LoginPage = () => {
                   type='submit'
                   fullWidth
                   size='md'
-                  loading={isLoading}
+                  loading={isPending}
                   className='bg-blue-600 hover:bg-blue-700'
                 >
                   Sign In
@@ -123,19 +116,24 @@ const LoginPage = () => {
               </Anchor>
             </Group>
 
-            <div className='text-center mt-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg'>
-              <Text size='sm' className='text-gray-600 dark:text-gray-300 mb-2'>
-                Demo Credentials:
-              </Text>
-              <Text
-                size='sm'
-                className='text-gray-800 dark:text-gray-200 font-mono'
-              >
-                Email: demo@example.com
-                <br />
-                Password: password
-              </Text>
-            </div>
+            {import.meta.env.DEV && (
+              <div className='text-center mt-4 p-4 bg-gray-50 dark:bg-gray-700 rounded-lg'>
+                <Text
+                  size='sm'
+                  className='text-gray-600 dark:text-gray-300 mb-2'
+                >
+                  Demo Credentials:
+                </Text>
+                <Text
+                  size='sm'
+                  className='text-gray-800 dark:text-gray-200 font-mono'
+                >
+                  Email: support@calendarone.com
+                  <br />
+                  Password: 123456sup
+                </Text>
+              </div>
+            )}
           </Stack>
         </Paper>
       </Container>

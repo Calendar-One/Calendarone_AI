@@ -1,6 +1,6 @@
 from api_server.api.dependencies import CurrentUser, LoginForm, SessionDep
 from api_server.core import security
-from api_server.schemas.auth import Token, RefreshTokenRequest
+from api_server.schemas.auth import TokenResponse, RefreshTokenRequest
 from api_server.schemas.base import ApiResponse
 from api_server.services import user_service
 from fastapi import APIRouter, HTTPException
@@ -8,7 +8,7 @@ from fastapi import APIRouter, HTTPException
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
-@router.post("/login", response_model=Token)
+@router.post("/login", response_model=ApiResponse[TokenResponse])
 async def login(request: LoginForm, db: SessionDep):
     user = user_service.authenticate_user(
         db, email=request.username, password=request.password
@@ -24,14 +24,17 @@ async def login(request: LoginForm, db: SessionDep):
 
     user.refresh_token = refresh_token
 
-    return {
-        "access_token": access_token,
-        "token_type": "bearer",
-        "user": user,
-    }
+    return ApiResponse.success(
+        data={
+            "access_token": access_token,
+            "refresh_token": refresh_token,
+            "token_type": "bearer",
+            "user": user,
+        }
+    )
 
 
-@router.post("/refresh", response_model=Token)
+@router.post("/refresh", response_model=ApiResponse[TokenResponse])
 async def refresh_token(request: RefreshTokenRequest, db: SessionDep):
     user = user_service.authenticate_with_refresh_token(db, request.refresh_token)
     if not user:
@@ -44,14 +47,17 @@ async def refresh_token(request: RefreshTokenRequest, db: SessionDep):
     new_refresh_token = user_service.generate_and_save_refresh_token(db, user)
     user.refresh_token = new_refresh_token
 
-    return {
-        "access_token": access_token,
-        "token_type": "bearer",
-        "user": user,
-    }
+    return ApiResponse.success(
+        data={
+            "access_token": access_token,
+            "refresh_token": new_refresh_token,
+            "token_type": "bearer",
+            "user": user,
+        }
+    )
 
 
 @router.post("/logout", response_model=ApiResponse)
 async def logout(current_user: CurrentUser, db: SessionDep):
     user_service.revoke_refresh_token(db, current_user)
-    return {"message": "Successfully logged out"}
+    return ApiResponse.success(message="Successfully logged out")

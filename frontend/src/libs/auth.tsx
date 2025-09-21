@@ -1,35 +1,25 @@
 import { configureAuth } from 'react-query-auth';
 import { Navigate, useLocation } from 'react-router';
 import { z } from 'zod';
-
 import { ROUTES } from '@/config/router';
 import { type TokenResponse } from '@/types/api/auth';
 import { type User } from '@/types/api/users';
-
 import { api } from './api-client';
+import type { ApiResponse } from '@/types/api';
 
 // api call definitions for auth (types, schemas, requests):
 // these are not part of features as this is a module shared across features
-
-const getUser = async (): Promise<User | null> => {
+const getUserApi = async (): Promise<User | null> => {
   try {
-    const response = await api.get('/users/me', {
-      headers: {
-        'Content-Type': 'application/json',
-        Accept: 'application/json',
-      },
-    });
-
-    return response.data;
+    const response: ApiResponse<User> = await api.get('/users/me');
+    return response.data ?? null;
   } catch (error) {
-    if (error?.response?.status === 401) {
-      localStorage.removeItem('accessToken');
-    }
+    console.error('Error getting user:', error);
     return null;
   }
 };
 
-const logout = (): Promise<void> => {
+const logoutApi = (): Promise<void> => {
   return api.post('/auth/logout');
 };
 
@@ -40,11 +30,11 @@ const loginInputSchema = z.object({
 
 type LoginInput = z.infer<typeof loginInputSchema>;
 
-const loginApi = (data: LoginInput): Promise<TokenResponse> => {
+const loginApi = (data: LoginInput): Promise<ApiResponse<TokenResponse>> => {
   const formData = new URLSearchParams();
   formData.append('username', data.username);
   formData.append('password', data.password);
-  
+
   return api.post('/auth/login', formData, {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -76,29 +66,34 @@ export type RegisterInput = z.infer<typeof registerInputSchema>;
 
 const registerWithEmailAndPassword = (
   data: RegisterInput
-): Promise<TokenResponse> => {
+): Promise<ApiResponse<TokenResponse>> => {
   return api.post('/auth/register', data);
 };
 
-const refreshApi = (refreshToken: string): Promise<TokenResponse> => {
-  return api.post('/auth/refresh', { refresh_token: refreshToken });
-};
-
 const authConfig = {
-  userFn: getUser,
+  userFn: getUserApi,
   loginFn: async (data: LoginInput) => {
     const response = await loginApi(data);
-    localStorage.setItem('accessToken', response.access_token);
-    return response.user;
+    if (!response.data) {
+      return null;
+    }
+    localStorage.setItem('accessToken', response.data?.access_token);
+    localStorage.setItem('refreshToken', response.data?.refresh_token);
+    return response.data?.user;
   },
   registerFn: async (data: RegisterInput) => {
     const response = await registerWithEmailAndPassword(data);
-    localStorage.setItem('accessToken', response.access_token);
-    return response.user;
+    if (!response.data) {
+      return null;
+    }
+    localStorage.setItem('accessToken', response.data?.access_token);
+    localStorage.setItem('refreshToken', response.data?.refresh_token);
+    return response.data?.user;
   },
   logoutFn: async () => {
     localStorage.removeItem('accessToken');
-    return await logout();
+    localStorage.removeItem('refreshToken');
+    return await logoutApi();
   },
 };
 
@@ -116,25 +111,4 @@ export const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   }
 
   return children;
-};
-
-export const refreshAuth = async (failedRequest: any) => {
-  const user = useUser();
-  const newToken = await refreshApi(user?.data?.refresh_token || '');
-
-  if (newToken) {
-    failedRequest.response.config.headers.Authorization =
-      newToken.token_type || 'Bearer' + ' ' + newToken.access_token;
-    localStorage.setItem('accessToken', newToken.access_token);
-    // you can set your token in storage too
-    // setToken({ token: newToken });
-    return Promise.resolve(newToken);
-  } else {
-    // you can redirect to login page here
-    // router.push("/login");
-
-    <Navigate to={ROUTES.auth.login.getHref(location.pathname)} replace />;
-
-    return Promise.reject();
-  }
 };

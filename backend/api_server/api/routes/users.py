@@ -8,9 +8,10 @@ from fastapi import APIRouter, HTTPException
 router = APIRouter(prefix="/users", tags=["users"])
 
 
-@router.get("/me", response_model=UserResponse)
+@router.get("/me", response_model=ApiResponse[UserResponse])
 async def me(current_user: CurrentUser):
     return ApiResponse.success(data=current_user)
+
 
 @router.get("/list", response_model=ApiResponse[UserResponse])
 def get_users(
